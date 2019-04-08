@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+    which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+    There has to be one entity for each item to be referenced.
+    An alternate method (rfc include) is described in the references. -->
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+    please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+    (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="3"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="no"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="no" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+    (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="exp" docName="draft-dahlberg-ll-quantum-02" ipr="trust200902">
+ <!-- category values: std, bcp, info, exp, and historic
+    ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
+       or pre5378Trust200902
+    you can add the attributes updates="NNNN" and obsoletes="NNNN"
+    they will automatically be output with "(if approved)" -->
+
+ <!-- ***** FRONT MATTER ***** -->
+
+ <front>
+   <!-- The abbreviated title is used in the page header - it is only necessary if the
+        full title is longer than 39 characters -->
+
+   <title abbrev="Link Layer in a Quantum Internet">The Link Layer service in a Quantum Internet</title>
+
+   <!-- add 'role="editor"' below for the editors if appropriate -->
+
+   <!-- Another author who claims to be an editor -->
+
+   <author fullname="Axel Dahlberg" initials="AD" surname="Dahlberg">
+     <organization>QuTech, Delft University of Technology</organization>
+
+     <address>
+       <postal>
+         <street>Lorentzweg 1</street>
+
+         <!-- Reorder these if your country does things differently -->
+
+         <city>Delft</city>
+
+         <region></region>
+
+         <code>2628 CJ</code>
+
+         <country>Netherlands</country>
+       </postal>
+
+       <phone>+31 (0)65 8966821</phone>
+
+       <email>e.a.dahlberg@tudelft.nl</email>
+
+       <!-- uri and facsimile elements may also be added -->
+     </address>
+   </author>
+
+   <author fullname="Matthew Skrzypczyk" initials="MS" surname="Skrzypczyk">
+     <organization>QuTech, Delft University of Technology</organization>
+
+     <address>
+       <postal>
+         <street>Lorentzweg 1</street>
+
+         <!-- Reorder these if your country does things differently -->
+
+         <city>Delft</city>
+
+         <region></region>
+
+         <code>2628 CJ</code>
+
+         <country>Netherlands</country>
+       </postal>
+
+       <email>m.d.skrzypczyk@student.tudelft.nl</email>
+
+       <!-- uri and facsimile elements may also be added -->
+     </address>
+   </author>
+
+   <author fullname="Stephanie Wehner" initials="SW" surname="Wehner" role="editor">
+     <organization>QuTech, Delft University of Technology</organization>
+
+     <address>
+       <postal>
+         <street>Lorentzweg 1</street>
+
+         <!-- Reorder these if your country does things differently -->
+
+         <city>Delft</city>
+
+         <region></region>
+
+         <code>2628 CJ</code>
+
+         <country>Netherlands</country>
+       </postal>
+
+       <!-- uri and facsimile elements may also be added -->
+     </address>
+   </author>
+
+   <date year="2019" />
+
+   <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+        in the current day for you. If only the current year is specified, xml2rfc will fill
+	 in the current day and month for you. If the year is not the current one, it is
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to
+	 specify just the year. -->
+
+   <!-- Meta-data Declarations -->
+
+   <area>General</area>
+
+   <workgroup>Quantum Internet Research Group</workgroup>
+
+   <!-- WG name at the upperleft corner of the doc,
+        IETF is fine for individual submissions.
+	 If this element is not present, the default is "Network Working Group",
+        which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+   <keyword>Quantum Internet</keyword>
+   <keyword>Link Layer</keyword>
+   <keyword>Service</keyword>
+   <keyword>Interface</keyword>
+
+   <!-- Keywords will be incorporated into HTML output
+        files in a meta tag but they have no effect on text or nroff
+        output. If you submit your draft to the RFC Editor, the
+        keywords will be used for the search engine. -->
+
+   <abstract>
+     <t>
+       In a classical network the link layer is responsible for transferring a datagram between two nodes that are connected by a single link, possibly including switches.
+       In a quantum network however, the link layer will need to provide a robust entanglement generation service between two quantum nodes which are connected by a quantum link.
+       This service can be used by higher layers to produce entanglement between distant nodes or to perform other operations such as qubit transmission, without full knowledge of the underlying hardware and its parameters.
+       This draft defines what can be expected from the service provided by a link layer for a Quantum Network and defines an interface between higher layers and the link layer.
+     </t>
+   </abstract>
+ </front>
+
+ <middle>
+   <section title="Introduction">
+     <t>
+       The most important fundamental operation in a quantum network is the generation of entanglement between nodes.
+       Short-distance entanglement can be used to generate long-distance entanglement with the use of an operation called entanglement swap <xref target="briegel98"/> (also formalised in <xref target="kompella18"/>).
+       If nodes A and B share an entangled pair and similarly for B and C, B can perform a so called Bell measurement <xref target="nielsen10"/> and send the measurement outcome (2 bits) over a classical channel to A or C such that in the end A and C share an entangled pair.
+       Furthermore, long-distance entanglement does in turn enable long-distance qubit transmission by the use of quantum teleportation <xref target="nielsen10"/> (also formalised in <xref target="kompella18"/>).
+       Node A can teleport an unknown qubit state to B by consuming an entangled pair between A and B and sending two classical bits to B. For an overview of quantum networking and its applications we refer to <xref target="wehner18"/>.
+     </t> 
+
+     <t>
+       Long lived entanglement between distant nodes capable of storing such entanglement has been demonstrated over a distance of up to 1.3 km <xref target="hensen15"/>, in a proof-of-principle experiment. This entanglement was also heralded, that is, there exits a so-called heralding signal that indicates success in entanglement production without consuming such entanglement.
+	Short lived and non-heralded entanglement has been observed from a satellite over a distance of 1200 km <xref target="pan16"/> in a proof of principle experiment. 
+       The next step towards a quantum network is to turn ad-hoc experiments that produce entanglement into a reliable service.
+       This is the role of the link layer, which turns an ad-hoc physical setup to a reliable entanglement generation service.
+	Reliable here means that the higher layers can (unless a timeout or other critical failures occur) rely in deterministic entanglement production.
+	In particular, this means that since the underlying physical process is often probabilistic but entanglement generation can be confirmed using the heralding signal, one of the main tasks of the link layer 
+is to manage re-tries in producing entanglement at the the physical layer.
+       Once an entangled pair has been generated, the nodes need to be able to agree on which qubits are involved in which entangled pair in order to use it, thus another main task of the link layer is to provide an entanglement identifier.
+     </t>
+   </section>
+
+   <section title="Scope">
+     <t>
+       This draft is meant to define the service and interface of an link layer of a quantum network. Further considerations that motivate this definition can be found in <xref target="dahlberg19"/>.
+       It does not present a protocol realising this service.
+       However a protocol that indeed does this have been proposed in <xref target="dahlberg19"/>, together with more details on use cases and design decisions in forming a quantum network stack.
+     </t>
+  </section>
+
+   <section title="Desired service">
+     <t>
+       This section definces the service that a link layer provides in a quantum network.
+       The interface and header specification is defined in the next section.
+     </t>
+
+     <t>
+       A link layer between two nodes A and B of a quantum network must provide the following minimal features (see <xref target="dahlberg19"/> for an extended feature set):
+     </t>
+
+     <t>
+       <list style="symbols">
+         <t>
+           Allow both node A and B to initialize entanglement generation.
+         </t>
+         <t>
+           Allow the initializing node to specify a desired minimum fidelity<xref target="nielsen10"/> and maximum waiting time.
+         </t>
+         <t>
+           Notify both nodes of success or failure of entanglement generation before the requested maximum waiting time has passed since the request was initialized.
+         </t>
+         <t>
+           If success is notified, the generated entangled pair has with high confidence higher (or equal) fidelity than the desired minimum fidelity.
+         </t>
+         <t>
+           For a successful request, provide an entanglement identifier to allow higher layers to use identify the entangled pair in the network without the need for further 
+		communication.
+         </t>
+       </list>
+     </t>
+   </section>
+
+   <section title="Interface">
+     <t>
+       This section describes the interface between higher layers and the link layer in a quantum network, along with header specifications for the type of messages.
+       The interface consists of a single type of message from the higher layers to the link layer, which is the CREATE message for requesting entanglement generation.
+       Response messages from the link layer to the higher layers take either the form of an ACK, an OK message or one of many error messages.
+       The ACK is sent back directly upon receiving a CREATE if the link layer supports the request and contains a CREATE ID such that the higher layer can associated the subsequent OK messages to the correct request.
+
+       It is assumed that the nodes in the network are assigned a unique ID in the network, which is used in the Remote Node ID parameters of the messages below.
+     </t>
+     <section title="Higher layers to link layer">
+       <t>
+         The higher layers can send a CREATE message to the link layer to request the generation of entanglement.
+         Along with other parameters, as specified below the higher layers can specify a minimum fidelity, a maximum waiting time and the number of entangled pairs to be produced.
+       </t>
+
+       <section title="Header specification">
+         <t>
+           The CREATE message contains the following parameters:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>
+               Remote Node ID (32 bits): Used if the node is directly connected to multiple nodes.
+               Indicates which node to generate entanglement with.
+             </t>
+             <t>
+               Minimum fidelity (16 bits): The desired minimum fidelity, between 0 and 1, of the generated entangled pair.
+               A binary value encoding the integer 'n' represents the fidelity 'n' divided by (2^16-1).
+             </t>
+             <t>
+               Max Time (16 bits): The maximum time in milliseconds that the higher layer is willing to wait for the request to be fulfilled.
+               Represented as a binary16 float as specified in <xref target="binary16"/>.
+             </t>
+             <t>
+               Purpose ID (16 bits): Allows the higher layer to tag the request for a specific purpose.
+               If the request is from an application this can be thought of as a port number.
+               The purpose ID can also be used by a network layer to specify that this entanglement request is part of long-distance entanglement generation over a specific path.
+             </t>
+             <t>
+               Number (16 bits): The number of entangled pairs to generate.
+             </t>
+             <t>
+               Priority (3 bits): Can be used to indicate if this request is of high priority and should ideally be fulfilled early.
+               Higher means faster service.
+             </t>
+             <t>
+               Type of request (TPE) (1 bit): Either create and keep (K) or measure directly (M), where K stores the generated entanglement in memory and M measures the entanglement directly.
+             </t>
+             <t>
+               Atomic (ATO) (1 bit): A flag that indicates that the request should be satisfied as a whole without interuption by other requests. 
+             </t>
+             <t>
+               Consecutive (CON) (1 bit): A flag indicating an OK is returned for each pair made for a request.
+			Otherwise, an OK is sent only when the entire request is completed (more common in application use cases). For K type requests, this means all pair should be in 
+			memory at the same time.
+             </t>
+             <t> Random Basis Choice (RBC) (2 bits): Choose to measure uniformaly randomly in either
+                 <list style="symbols">
+                  <t> 00: Ignored </t>
+                  <t> 01: X or Z basis (BB84) </t>
+                  <t> 10: X, Y or Z basis (six state) </t>
+                  <t> 11: CHSH rotated bases, Z basis rotated by angles +/- pi/4 around Y axis.</t> 
+                </list>
+             </t>
+             <t>
+                 Rotation of measurement basis in the case of M types of requests. Three rotations from the defaults Z basis are performed, first a rotation around the X-axis (ROTX1), then a rotation around the Y-axis (ROTY) and finally a rotation again around the X-axis.
+                 Note that arbitrary rotations can be composed as these three rotations, see <eref target="https://en.wikipedia.org/wiki/Euler_angles"/>.
+                 If all three fields are 00000000, the qubits are measured in the Z basis.
+                 If RBC is not 00, these three fields (ROTX1, ROTY and ROTX2) are ignored.
+                 <list style="symbols">
+                   <t>
+                     Measurement rotation around X (ROTX1) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by angle of 2 pi/256 * ROTX1 
+                   </t>
+                   <t>
+                     Measurement rotation around Y (ROTY) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the Y axis by an angle of 2 pi/256 * ROTY 
+                   </t>
+                   <t>
+                     Measurement rotation around X (ROTX2) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by an angle of 2 pi/256 * ROTX2
+                 </t>
+               </list>
+             </t>
+           </list>
+         </t>
+         <t>
+           The complete header specification of the CREATE message is given in <xref target="fig:CREATE"/>.
+         </t>
+         <figure align="center" title="CREATE message header format" anchor="fig:CREATE">
+           <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Remote Node ID                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       Minimum Fidelity        |          Max Time             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Purpose ID          |           Number              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Prio |T|A|C|   |               |               |               |
+|rity |P|T|O|RBC|   ROTX1       |     ROTY      |     ROTX2     |
+|     |E|O|N|   |               |               |               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+         </figure>
+       </section>
+     </section>
+     <section title="Link layer to higher layers">
+       <t>
+         When receiving a CREATE message from higher layers the link layer will directly respond and notify the higher layer whether requests will be scheduled for generation.
+         If so the link layer responds with an ACK containing a CREATE ID.
+         The higher layer may choose to use this CREATE ID together with the ID of the requesting node to associate OK messages it receives from the link layer to the correct request.
+         Note that the ID of the requesting node is needed since the ACK is returned directly and the CREATE ID is thus not unique for requests from different nodes.
+         If the link layer does not support the given request an error message is instead returned.
+       </t>
+
+       <t>
+         When a request is satisfied an OK message is sent to the higher layer.
+         The OK message contains different fields depending on whether the request was of type K (keep) or M (measure directly).
+         For K the OK contains a logical qubit identifier (LQID) such that the higher layer can know which logical qubit holds the generated entanglement.
+         For M the OK contains the basis which the qubit was measured and the measurement outcome.
+       </t>
+
+       <t>
+         Both during and after entanglement generation, the link layer can return error messages to the higher layers, as further described below.
+         For example if something happens to the qubit or another error occurs such that the entanglement is not valid anymore, the link layer can issue an ERR_EXPIRE message.
+       </t>
+       <section title="Header specification">
+         <t>
+           To distinguish the different types of messages that the link layer can return to the higher layer, the first part of the header is a 4 bit field which specifies the type of message using the following mapping:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>0001: ACK</t>
+             <t>0010: Type K OK</t>
+             <t>0011: Type M OK</t>
+             <t>0100: ERR</t>
+           </list>
+         </t>
+         <t>
+           The complete header specification for these four types of messages are shown below in <xref target="fig:ACK"/> to <xref target="fig:Error"/>.
+         </t>
+         <t>
+           The ACK message contains the following parameters:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>
+               Create ID (16 bits): A Create ID that the higher layer can use to associate subsequent OK messages to the request.
+             </t>
+           </list>
+         </t>
+         <figure align="center" title="ACK message header format" anchor="fig:ACK">
+           <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type  |          Create ID            |         Unused        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+         </figure>
+
+         <t>
+           The type K OK message contains the following parameters:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>Create ID (16 bits): Must be the same Create ID that was given in the ACK of the corresponding request.</t>
+             <t>Logical Qubit ID (LQID) (4 bits): A logical ID of the qubit which is part of the entangled pair.</t>
+             <t>Directionality flag (D) (1 bit): Specifies if the request came from this node (D=0) or from the remote node (D=1).</t>
+             <t>
+               Sequence number (16 bits): A sequence number for identifying the entangled pair.
+               It is assumed to be unique for entangled pairs between the given nodes.
+               Thus together with the IDs of the nodes between which the entanglement is produced, one can create an entanglement identifier which is unique in the network.
+             </t>
+             <t>Purpose ID (16 bits): The purpose ID of the request (only used by the node which did not initiate the request)</t>
+             <t>Remote Node ID (32 bits): Used if the node is directly connected to multiple nodes.</t>
+             <t>
+               Goodness (16 bits): An estimate of the fidelity of the generated entangled pair.
+               Should not be seen as a guarantee.
+             </t>
+             <t>
+               Time of Goodness (ToG) (16 bits): The time of the goodness estimate.
+               Not necessarily the time when the estimate is performed but rather the time for which the estimate is for.
+               Can be used to make an updated estimate based on decoherence times of the qubits.
+             </t>
+           </list>
+         </t>
+         <figure align="center" title="Type K OK message header format" anchor="fig:K_OK">
+           <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type  |          Create ID            | LQID  |D|   Unused    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        Sequence Number        |          Purpose ID           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Remote Node ID                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Goodness            |      Time of Goodness         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+         </figure>
+         <t>The type M OK message contains the following parameters:</t>
+         <t>
+           <list style="symbols">
+             <t>Create ID (16 bits): The same Create ID that was given in the ACK of the corresponding request.</t>
+             <t>Measurement outcome (M) (1 bit): The outcome of the measurement performed on the entangled pair.</t>
+             <t>
+               Basis (3 bits): Which basis the entangled pair was measured in, used if the basis is random, i.e. if RBC is not 00 in the CREATE.
+               The following representation is used:
+               <list style="symbols">
+                 <t>000: Z-basis</t>
+                 <t>001: X-basis</t>
+                 <t>010: Y-basis</t>
+                 <t>011: Z-basis rotated by angle pi/4 around Y-axis</t>
+                 <t>100: Z-basis rotated by angle -pi/4 around Y-axis</t>
+                 <t>101: Unused</t>
+                 <t>110: Unused</t>
+                 <t>111: Unused</t>
+               </list>
+             </t>
+             <t>Directionality flag (D) (1 bit): Specifies if the request came from this node (D=0) or from the remote node (D=1).</t>
+             <t>
+               Sequence number (16 bits): A sequence number for identifying the entangled pair.
+               It is assumed to be unique for entangled pairs between the given nodes.
+               Thus together with the IDs of the nodes, one can create an entanglement identifier which is unique in the network.
+             </t>
+             <t>Purpose ID (16 bits): The purpose ID of the request (only used by the node which did not initiate the request)</t>
+             <t>Remote Node ID (32 bits): Used if the node is directly connected to multiple nodes.</t>
+             <t>
+               Goodness (16 bits): An estimate of the fidelity of the generated entangled pair.
+               Should not be seen as a guarantee.
+             </t>
+           </list>
+         </t>
+         <t>
+           Note: Time of Goodness is not needed here since there is no decoherence on the measurement outcomes.
+         </t>
+         <figure align="center" title="Type M OK message header format" anchor="fig:M_OK">
+           <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type  |          Create ID            |M|D|Basis|   Unused    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        Sequence Number        |          Purpose ID           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Remote Node ID                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Goodness            |            Unused             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+         </figure>
+
+         <t>
+           The ERR message contains the following parameters:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>Create ID (16 bits): The same Create ID that was given in the ACK of the corresponding request.</t>
+             <t>
+               Error code (ERR) (4 bits): Specifies what error occurred.
+               See below what the error codes mean.
+             </t>
+             <t>
+               Expire by sequence numbers (S) (1 bit): Used by ERR_EXPIRE, to specify whether a range of sequence numbers should be expired (S=1) or all sequence numbers associated with the given Create ID and Origin Node (S=0).
+             </t>
+             <t>
+               Sequence number low (16 bits): Used by error code ERR_EXPIRE to identify a range of sequence numbers that needs to be expired.
+               Numbers above Sequence number low (inclusive) and below Sequence number high (exclusive) should be expired.
+             </t>
+             <t>
+               Sequence number high (16 bits): Used by error code ERR_EXPIRE to identify a range of sequence numbers that needs to be expired.
+               Numbers above Sequence number low (inclusive) and below Sequence number high (exclusive) should be expired.
+             </t>
+             <t>
+               Origin Node (32 bits): Used if the node is directly connected to multiple nodes.
+               Needed here since Create IDs are not unique for request from different nodes.
+             </t>
+           </list>
+         </t>
+         <figure align="center" title="Error message header format" anchor="fig:Error">
+           <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type  |          Create ID            |  ERR  |S|   Unused    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|    Sequence number low        |    Sequence number high       |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Origin Node                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+         </figure>
+
+         <t>
+           The different error codes using in an error message are the following:
+         </t>
+         <t>
+           <list style="symbols">
+             <t>
+               Error returned directly when a CREATE message is received:
+               <list style="symbols">
+                 <t>
+                   ERR_UNSUPP (0001): The given request is not supported.
+                   For example if the minimum fidelity is not achievable or if the request is of type K and the hardware cannot store entanglement.
+                 </t>
+                 <t>ERR_CREATE (0010): The create message could not be parsed.</t>
+                 <t>ERR_REJECTED (0011): The request was rejected by this node based on for example the Purpose ID.</t>
+                 <t>ERR_OTHER (0100): An unknown error occurred.</t>
+               </list>
+             </t>
+             <t>
+               Error returned after a CREATE message is received, before or after an OK is returned:
+               <list style="symbols">
+                 <t>
+                   ERR_EXPIRE (0101): One or more already sent OK messages have expired and the entangled pair is not available anymore.
+                   Can either be specified as a range of sequence numbers or by a create ID by using the S flag.
+                 </t>
+                 <t>ERR_REJECTED (0011): The request was rejected by the other node based on for example the Purpose ID.</t>
+                 <t>ERR_TIMEOUT (0110): The request was not satisfied within the requested max waiting time.</t>
+               </list>
+             </t>
+           </list>
+         </t>
+       </section>
+     </section>
+   </section>
+
+   <section anchor="IANA" title="IANA Considerations">
+     <t>This memo includes no request to IANA.</t>
+   </section>
+
+   <!-- Possibly a 'Contributors' section ... -->
+
+   <section anchor="Acknowledgements" title="Acknowledgements">
+     <t>
+       The authors would like to acknowledge funding received from the EU Flagship on Quantum Technologies, Quantum Internet Alliance.
+     </t>
+
+     <t>
+       The authors would further like to acknowledge Tim Coopmans, Leon Wubben, Filip Rozpedek, Matteo Pompili, Arian Stolk, Przemyslaw Pawelczak, Robert Knegjens, Julio de Oliveria Filho, Sidney Cadot, Joris van Rantwijk and Ronald Hanson for inputs and discusssion and Wojciech Kozlowski for useful feedback on this draft.
+     </t>
+   </section>
+
+ </middle>
+
+ <!--  *****BACK MATTER ***** -->
+
+ <back>
+   <!-- References split into informative and normative -->
+
+   <!-- There are 2 ways to insert reference entries from the citation libraries:
+    1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+    2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+       (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+    Both are cited textually in the same manner: by using xref elements.
+    If you use the PI option, xml2rfc will, by default, try to find included files in the same
+    directory as the including file. You can also define the XML_LIBRARY environment variable
+    with a value containing a set of directories to search.  These can be either in the local
+    filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+   <references title="Informative References">
+     <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+
+     <reference anchor="briegel98" target="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.81.5932">
+       <front>
+         <title>Quantum repeates: The Role of Imperfect Local Operations in Quantum Communication</title>
+
+         <author initials="H.J" surname="Briegel" />
+         <author initials="W" surname="Dur" />
+         <author initials="J.I" surname="Cirac" />
+         <author initials="P" surname="Zoller" />
+
+         <date year="1998" />
+       </front>
+       <seriesInfo name="Physical Review Letters" value="81, 26" />
+     </reference>
+
+     <reference anchor="kompella18" target="https://datatracker.ietf.org/doc/draft-kaws-qirg-advent/">
+       <front>
+         <title>Advertising Entanglement Capabilities in Quantum Networks</title>
+
+         <author initials="K" surname="Kompella" />
+         <author initials="M" surname="Aelmans" />
+         <author initials="S" surname="Wehner" />
+         <author initials="C" surname="Sirbu" />
+         <author initials="A" surname="Dahlberg" />
+
+         <date year="2018" />
+       </front>
+       <seriesInfo name="QIRG" value="Internet-Draft" />
+     </reference>
+
+     <reference anchor="nielsen10" target="https://doi.org/10.1017/CBO9780511976667">
+       <front>
+         <title>Quantum Computation and Quantum Information</title>
+
+         <author initials="M.A." surname="Nielsen" />
+         <author initials="I.L." surname="Chuang" />
+
+         <date year="2018" />
+       </front>
+       <seriesInfo name="QIRG" value="Internet-Draft" />
+     </reference>
+
+     <reference anchor="hensen15" target="https://arxiv.org/abs/1508.05949">
+       <front>
+         <title>Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres</title>
+
+         <author initials="B" surname="Hensen" />
+         <author initials="H" surname="Bernien" />
+         <author initials="A.E" surname="Dreau" />
+         <author initials="A" surname="Reiserer" />
+         <author initials="N" surname="Kalb" />
+         <author initials="M.S" surname="Blok" />
+         <author initials="J" surname="Ruitenberg" />
+         <author initials="R.F.L" surname="Vermeulen" />
+         <author initials="R.N" surname="Schouten" />
+         <author initials="C" surname="Abellan" />
+         <author initials="W" surname="Amaya" />
+         <author initials="V" surname="Pruneri" />
+         <author initials="M.W" surname="Mitchell" />
+         <author initials="M" surname="Markham" />
+         <author initials="D.J" surname="Twitchen" />
+         <author initials="D" surname="Elkouss" />
+         <author initials="S" surname="Wehner" />
+         <author initials="T.H" surname="Taminiau" />
+         <author initials="R" surname="Hanson" />
+
+         <date year="2015" />
+       </front>
+       <seriesInfo name="Nature" value="526, 682-686" />
+     </reference>
+
+     <reference anchor="wehner18" target="http://science.sciencemag.org/content/362/6412/eaam9288?intcmp=trendmd-sci">
+       <front>
+         <title>Quantum internet: A vision for the road ahead</title>
+
+         <author initials="S" surname="Wehner" />
+         <author initials="D" surname="Elkouss" />
+         <author initials="R" surname="Hanson" />
+
+         <date year="2018" />
+       </front>
+       <seriesInfo name="Science" value="362, 6412" />
+     </reference>
+
+     <reference anchor="pan16" target="https://arxiv.org/abs/1707.01339">
+       <front>
+         <title>Satellite-based entanglement distribution over 1200 kilometers</title>
+
+           <author initials="J" surname="Yin" />
+           <author initials="Y" surname="Cao" /> 
+           <author initials="Y.H" surname="Li" />
+           <author initials="S.K" surname="Liao" />
+           <author initials="L" surname="Zhang" />
+           <author initials="J.G" surname="Ren" />
+           <author initials="W.Q" surname="Cai" />
+           <author initials="W.Y" surname="Liu" />
+           <author initials="B" surname="Li" />
+           <author initials="H" surname="Dai" />
+           <author initials="G.B" surname="Li" />
+           <author initials="Q.M" surname="Lu" />
+           <author initials="Y.H" surname="Gong" />
+           <author initials="Y" surname="Xu" />
+           <author initials="S.L" surname="Li" />
+           <author initials="F.Z" surname="Li" />
+           <author initials="Y.Y" surname="Yin" />
+           <author initials="Z.Q" surname="Jiang" />
+           <author initials="M" surname="Li" />
+           <author initials="J.J" surname="Jia" />
+           <author initials="G" surname="Ren" />
+           <author initials="D" surname="He" />
+           <author initials="Y.L" surname="Zhou" />
+           <author initials="X.X" surname="Zhang" />
+           <author initials="N" surname="Wang" />
+           <author initials="X" surname="Chang" />
+           <author initials="Z.C" surname="Zhu" />
+           <author initials="N.L" surname="Liu" />
+           <author initials="Y.A" surname="Chen" />
+           <author initials="C.Y" surname="Lu" />
+           <author initials="R" surname="Shu" />
+           <author initials="C.Z" surname="Peng" />
+           <author initials="J.Y" surname="Wang" />
+           <author initials="J.W" surname="Pan" />
+
+         <date year="2017" />
+       </front>
+       <seriesInfo name="Science" value="356, 6343" />
+     </reference>
+
+     <reference anchor="dahlberg19" target="https://arxiv.org/abs/1903.09778">
+       <front>
+         <title>A Link Layer Protocol for Quantum Networks</title>
+
+         <author initials="A" surname="Dahlberg" />
+         <author initials="M" surname="Skrzypczyk" />
+         <author initials="T" surname="Coopmans" />
+         <author initials="L" surname="Wubben" />
+         <author initials="F" surname="Rozpedek" />
+         <author initials="M" surname="Pompili" />
+         <author initials="A" surname="Stolk" />
+         <author initials="P" surname="Pawelczak" />
+         <author initials="R" surname="Knegjens" />
+         <author initials="J" surname="de Oliveira Filho" />
+         <author initials="R" surname="Hanson" />
+         <author initials="S" surname="Wehner" />
+
+         <date year="2019" />
+       </front>
+       <seriesInfo name="arXiv pre-print" value="arXiv:1903.09778" />
+     </reference>
+     <reference anchor="binary16" target="https://ieeexplore.ieee.org/document/30711">
+       <front>
+         <title>754-1985 - IEEE Standard for Binary Floating-Point Arithmetic</title>
+
+         <author initials="" surname="IEEE" />
+
+         <date year="1990" />
+       </front>
+       <seriesInfo name="IEEE standard" value="10.1109/IEEESTD.1985.82928" />
+     </reference>
+   </references>
+ </back>
+</rfc>
