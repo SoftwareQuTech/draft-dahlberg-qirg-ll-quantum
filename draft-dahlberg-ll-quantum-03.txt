@@ -5,8 +5,8 @@
 Quantum Internet Research Group                             AD. Dahlberg
 Internet-Draft                                            MS. Skrzypczyk
 Intended status: Experimental                            SW. Wehner, Ed.
-Expires: October 7, 2019          QuTech, Delft University of Technology
-                                                           April 5, 2019
+Expires: December 19, 2019        QuTech, Delft University of Technology
+                                                           June 17, 2019
 
 
               The Link Layer service in a Quantum Internet
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 7, 2019.
+   This Internet-Draft will expire on December 19, 2019.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 1]
+Dahlberg, et al.        Expires December 19, 2019               [Page 1]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    (https://trustee.ietf.org/license-info) in effect on the date of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 2]
+Dahlberg, et al.        Expires December 19, 2019               [Page 2]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    to turn ad-hoc experiments that produce entanglement into a reliable
@@ -165,9 +165,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 3]
+Dahlberg, et al.        Expires December 19, 2019               [Page 3]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    o  For a successful request, provide an entanglement identifier to
@@ -221,9 +221,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 4]
+Dahlberg, et al.        Expires December 19, 2019               [Page 4]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
       request is part of long-distance entanglement generation over a
@@ -277,9 +277,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 5]
+Dahlberg, et al.        Expires December 19, 2019               [Page 5]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
          measurement.  Specified measurement to be rotated around the X
@@ -333,9 +333,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 6]
+Dahlberg, et al.        Expires December 19, 2019               [Page 6]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    OK contains a logical qubit identifier (LQID) such that the higher
@@ -389,9 +389,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 7]
+Dahlberg, et al.        Expires December 19, 2019               [Page 7]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    o  Logical Qubit ID (LQID) (4 bits): A logical ID of the qubit which
@@ -445,9 +445,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 8]
+Dahlberg, et al.        Expires December 19, 2019               [Page 8]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    o  Basis (3 bits): Which basis the entangled pair was measured in,
@@ -501,9 +501,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019                [Page 9]
+Dahlberg, et al.        Expires December 19, 2019               [Page 9]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
     0                   1                   2                   3
@@ -557,9 +557,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019               [Page 10]
+Dahlberg, et al.        Expires December 19, 2019              [Page 10]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
     0                   1                   2                   3
@@ -613,9 +613,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019               [Page 11]
+Dahlberg, et al.        Expires December 19, 2019              [Page 11]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
 6.  Acknowledgements
@@ -644,8 +644,8 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
               draft-kaws-qirg-advent/>.
 
    [3]        Nielsen, M. and I. Chuang, "Quantum Computation and
-              Quantum Information", QIRG Internet-Draft, 2018,
-              <https://doi.org/10.1017/CBO9780511976667>.
+              Quantum Information", Book Cambridge University Press,
+              2010, <https://doi.org/10.1017/CBO9780511976667>.
 
    [4]        Hensen, B., Bernien, H., Dreau, A., Reiserer, A., Kalb,
               N., Blok, M., Ruitenberg, J., Vermeulen, R., Schouten, R.,
@@ -669,9 +669,9 @@ Internet-Draft      Link Layer in a Quantum Internet          April 2019
 
 
 
-Dahlberg, et al.         Expires October 7, 2019               [Page 12]
+Dahlberg, et al.        Expires December 19, 2019              [Page 12]
 
-Internet-Draft      Link Layer in a Quantum Internet          April 2019
+Internet-Draft      Link Layer in a Quantum Internet           June 2019
 
 
    [6]        Yin, J., Cao, Y., Li, Y., Liao, S., Zhang, L., Ren, J.,
@@ -725,4 +725,4 @@ Authors' Addresses
 
 
 
-Dahlberg, et al.         Expires October 7, 2019               [Page 13]
+Dahlberg, et al.        Expires December 19, 2019              [Page 13]
