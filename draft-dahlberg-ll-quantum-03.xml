@@ -625,9 +625,9 @@ is to manage re-tries in producing entanglement at the the physical layer.
          <author initials="M.A." surname="Nielsen" />
          <author initials="I.L." surname="Chuang" />
 
-         <date year="2018" />
+         <date year="2010" />
        </front>
-       <seriesInfo name="QIRG" value="Internet-Draft" />
+       <seriesInfo name="Book" value="Cambridge University Press" />
      </reference>
 
      <reference anchor="hensen15" target="https://arxiv.org/abs/1508.05949">
