@@ -254,7 +254,7 @@ is to manage re-tries in producing entanglement at the the physical layer.
                A binary value encoding the integer 'n' represents the fidelity 'n' divided by (2^16-1).
              </t>
              <t>
-               Time unit (tu) (2 bits): The time units used for specifying Max Time, where (00, 01, 10) each indicate (micro-seconds, milliseconds, seconds) respectively and 11 is unused.
+               Time Unit (TU) (2 bits): The time units used for specifying Max Time, where (00, 01, 10) each indicate (micro-seconds, milliseconds, seconds) respectively and 11 is unused.
              </t>
              <t>
                Max Time (14 bits): The maximum time in the time units specified above that the higher layer is willing to wait for the request to be fulfilled.
@@ -339,7 +339,7 @@ is to manage re-tries in producing entanglement at the the physical layer.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                        Remote Node ID                         |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|       Minimum Fidelity        |          Max Time             |
+|       Minimum Fidelity        |TU |      Max Time             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |           Purpose ID          |           Number              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
