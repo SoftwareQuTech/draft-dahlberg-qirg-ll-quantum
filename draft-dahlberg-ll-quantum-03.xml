@@ -257,7 +257,7 @@ is to manage re-tries in producing entanglement at the the physical layer.
                Time unit (tu) (2 bits): The time units used for specifying Max Time, where (00, 01, 10) each indicate (micro-seconds, milliseconds, seconds) respectively and 11 is unused.
              </t>
              <t>
-               Max Time (16 bits): The maximum time in the time units specified above that the higher layer is willing to wait for the request to be fulfilled.
+               Max Time (14 bits): The maximum time in the time units specified above that the higher layer is willing to wait for the request to be fulfilled.
                A binary value encoding the integer 'n' representing the time in the specified time units.
              </t>
              <t>
@@ -303,7 +303,7 @@ is to manage re-tries in producing entanglement at the the physical layer.
                    <t>(PR1) (8 bits): Parameter for remote probability distribution used to sample basis if RR is not 00</t>
                    <t>(PR2) (8 bits): Parameter for remote probability distribution used to sample basis if RR is not 00</t>
                  </list>
-                 Each value is seen as the integet representing of the binary value.
+                 Each value is seen as the integer representing of the binary value.
                  Probability distributions are used as follows
                  <list style="symbols">
                   <t> If the specified random basis has 2 elements then the distribution obeys the probabilities (PL(R)1 / 255, 1 - PL(R)1 / 255)</t>
