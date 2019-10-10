@@ -254,8 +254,11 @@ is to manage re-tries in producing entanglement at the the physical layer.
                A binary value encoding the integer 'n' represents the fidelity 'n' divided by (2^16-1).
              </t>
              <t>
-               Max Time (16 bits): The maximum time in milliseconds that the higher layer is willing to wait for the request to be fulfilled.
-               Represented as a binary16 float as specified in <xref target="binary16"/>.
+               Time Unit (TU) (2 bits): The time units used for specifying Max Time, where (00, 01, 10) each indicate (micro-seconds, milliseconds, seconds) respectively and 11 is unused.
+             </t>
+             <t>
+               Max Time (14 bits): The maximum time in the time units specified above that the higher layer is willing to wait for the request to be fulfilled.
+               A binary value encoding the integer 'n' representing the time in the specified time units.
              </t>
              <t>
                Purpose ID (16 bits): Allows the higher layer to tag the request for a specific purpose.
@@ -280,28 +283,47 @@ is to manage re-tries in producing entanglement at the the physical layer.
 			Otherwise, an OK is sent only when the entire request is completed (more common in application use cases). For K type requests, this means all pair should be in 
 			memory at the same time.
              </t>
-             <t> Random Basis Choice (RBC) (2 bits): Choose to measure uniformaly randomly in either
+             <t> Random basis choice for measure directly
+                 <list style="symbols"> 
+                   <t>(RL) (2 bits): Choose to measure the local qubit randomly in either</t>
+                   <t>(RR) (2 bits): Choose to measure the remote qubit randomly in either</t>
+                 </list>
+                 Using the following encoding:
                  <list style="symbols">
-                  <t> 00: Ignored </t>
+                  <t> 00: No random choice </t>
                   <t> 01: X or Z basis (BB84) </t>
                   <t> 10: X, Y or Z basis (six state) </t>
                   <t> 11: CHSH rotated bases, Z basis rotated by angles +/- pi/4 around Y axis.</t> 
                 </list>
-             </t>
+            </t>
+             <t> Probability distributions used to sample random basis for measure directly:
+                 <list style="symbols"> 
+                   <t>(PL1) (8 bits): Parameter for local probability distribution used to sample basis if RL is not 00</t>
+                   <t>(PL2) (8 bits): Parameter for local probability distribution used to sample basis if RL is not 00</t>
+                   <t>(PR1) (8 bits): Parameter for remote probability distribution used to sample basis if RR is not 00</t>
+                   <t>(PR2) (8 bits): Parameter for remote probability distribution used to sample basis if RR is not 00</t>
+                 </list>
+                 Each value is seen as the integer representing of the binary value.
+                 Probability distributions are used as follows
+                 <list style="symbols">
+                  <t> If the specified random basis has 2 elements then the distribution obeys the probabilities (PL(R)1 / 255, 1 - PL(R)1 / 255)</t>
+                  <t> If the specified random basis has 3 elements then the distribution obeys the probabilities (PL(R)1 / 255, PL(R)2 / 255, 1 - PL(R)1 / 255 - PL(R)2 / 255)</t>
+                </list>
+            </t>
              <t>
-                 Rotation of measurement basis in the case of M types of requests. Three rotations from the defaults Z basis are performed, first a rotation around the X-axis (ROTX1), then a rotation around the Y-axis (ROTY) and finally a rotation again around the X-axis.
+                 Rotation of measurement basis in the case of M types of requests for both the local and remote measurement. Three rotations from the defaults Z basis are performed, first a rotation around the X-axis (ROTX1L(R)), then a rotation around the Y-axis (ROTYL(R)) and finally a rotation again around the X-axis.
                  Note that arbitrary rotations can be composed as these three rotations, see <eref target="https://en.wikipedia.org/wiki/Euler_angles"/>.
                  If all three fields are 00000000, the qubits are measured in the Z basis.
-                 If RBC is not 00, these three fields (ROTX1, ROTY and ROTX2) are ignored.
+                 If RL(R) is not 00, these three fields (ROTX1L(R), ROTYL(R) and ROTX2L(R)) are ignored.
                  <list style="symbols">
                    <t>
-                     Measurement rotation around X (ROTX1) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by angle of 2 pi/256 * ROTX1 
+                     Measurement rotation around X for local (remote) node (ROTX1L(R)) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by angle of 2 pi/256 * ROTX1 
                    </t>
                    <t>
-                     Measurement rotation around Y (ROTY) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the Y axis by an angle of 2 pi/256 * ROTY 
+                     Measurement rotation around Y for local (remote) node (ROTYL(R)) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the Y axis by an angle of 2 pi/256 * ROTY 
                    </t>
                    <t>
-                     Measurement rotation around X (ROTX2) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by an angle of 2 pi/256 * ROTX2
+                     Measurement rotation around X for local (remote) node (ROTX2L(R)) (8 bits): Measurement to be performed in the case of M types of request. Default is Z measurement. Specified measurement to be rotated around the X axis by an angle of 2 pi/256 * ROTX2
                  </t>
                </list>
              </t>
@@ -317,13 +339,21 @@ is to manage re-tries in producing entanglement at the the physical layer.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                        Remote Node ID                         |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|       Minimum Fidelity        |          Max Time             |
+|       Minimum Fidelity        |TU |      Max Time             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |           Purpose ID          |           Number              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Prio |T|A|C|   |               |               |               |
-|rity |P|T|O|RBC|   ROTX1       |     ROTY      |     ROTX2     |
-|     |E|O|N|   |               |               |               |
+|Prio |T|A|C|   |   |           |               |               |
+|rity |P|T|O|RL |RR | reserved  |      PL1      |      PL2      |
+|     |E|O|N|   |   |           |               |               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               |               |               |               |
+|      PR1      |      PR2      |     ROTX1L    |     ROTXYL    |
+|               |               |               |               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               |               |               |               |
+|     ROTX2L    |    ROTX1R     |     ROTYR     |     ROTX2R    |
+|               |               |               |               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
            ]]></artwork>
          </figure>
@@ -736,16 +766,6 @@ is to manage re-tries in producing entanglement at the the physical layer.
          <date year="2019" />
        </front>
        <seriesInfo name="arXiv pre-print" value="arXiv:1903.09778" />
-     </reference>
-     <reference anchor="binary16" target="https://ieeexplore.ieee.org/document/30711">
-       <front>
-         <title>754-1985 - IEEE Standard for Binary Floating-Point Arithmetic</title>
-
-         <author initials="" surname="IEEE" />
-
-         <date year="1990" />
-       </front>
-       <seriesInfo name="IEEE standard" value="10.1109/IEEESTD.1985.82928" />
      </reference>
    </references>
  </back>
